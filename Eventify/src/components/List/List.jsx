@@ -5,47 +5,47 @@ import axios from "axios";
 const BusinessForm = () => {
   const [selectedService, setSelectedService] = useState("");
   const [formData, setFormData] = useState({
-    serviceType: "",
-    businessName: "",
-    serviceArea: "",
-    price: "",
-    venueName: "",
-    venueCapacity: "",
-    venuePricePerPlate: "",
-    venueDescription: "",
-    venueCity: "",
-    venueAddress: "",
-    venueBestForEventTypes: "",
-    venueFoodType: "",
-    venueAmenities: "",
-    venueWebsite: "",
-    venueTwitter: "",
-    venueInstagram: "",
-    venueImages: [],
-    vendorImages: [],
+    ServiceType: "",
+    ServiceName: "",
+    ServiceArea: "",
+    Price: "",
+    Name: "",
+    Capacity: "",
+    PricePerPlate: "",
+    Description: "",
+    City: "",
+    Address: "",
+    BestForEventTypes: "",
+    FoodType: "",
+    Amenities: "",
+    Website: "",
+    Twitter: "",
+    Instagram: "",
+    Photos: [],
+    Images: [],
   });
 
   const handleServiceSelection = (e) => {
     setSelectedService(e.target.value);
     setFormData({
-      serviceType: "",
-      businessName: "",
-      serviceArea: "",
-      price: "",
-      venueName: "",
-      venueCapacity: "",
-      venuePricePerPlate: "",
-      venueDescription: "",
-      venueCity: "",
-      venueAddress: "",
-      venueBestForEventTypes: "",
-      venueFoodType: "",
-      venueAmenities: "",
-      venueWebsite: "",
-      venueTwitter: "",
-      venueInstagram: "",
-      venueImages: [],
-      vendorImages: [],
+      ServiceType: "",
+      ServiceName: "",
+      ServiceArea: "",
+      Price: "",
+      Name: "",
+      Capacity: "",
+      PricePerPlate: "",
+      Description: "",
+      City: "",
+      Address: "",
+      BestForEventTypes: "",
+      FoodType: "",
+      Amenities: "",
+      Website: "",
+      Twitter: "",
+      Instagram: "",
+      Photos: [],
+      Images: [],
     });
   };
 
@@ -77,28 +77,25 @@ const BusinessForm = () => {
     try {
       const data = new FormData();
 
-      // Handle the venue or vendor form data depending on the selection
       if (selectedService === "venue") {
         Object.entries(formData).forEach(([key, value]) => {
-          if (key !== "venueImages" && key !== "vendorImages") {
+          if (key !== "Photos" && key !== "Images") {
             data.append(key, value);
           }
         });
 
-        // Append venue images
-        for (let i = 0; i < formData.venueImages.length; i++) {
-          data.append("venueImages", formData.venueImages[i]);
+        for (let i = 0; i < formData.Photos.length; i++) {
+          data.append("Photos", formData.Photos[i]);
         }
       } else if (selectedService === "vendor") {
         Object.entries(formData).forEach(([key, value]) => {
-          if (key !== "venueImages" && key !== "vendorImages") {
+          if (key !== "Photos" && key !== "Images") {
             data.append(key, value);
           }
         });
 
-        // Append vendor images
-        for (let i = 0; i < formData.vendorImages.length; i++) {
-          data.append("vendorImages", formData.vendorImages[i]);
+        for (let i = 0; i < formData.Images.length; i++) {
+          data.append("Images", formData.Images[i]);
         }
       }
 
@@ -162,8 +159,8 @@ const BusinessForm = () => {
                 <label>Venue Name *</label>
                 <input
                   type="text"
-                  name="venueName"
-                  value={formData.venueName}
+                  name="Name"
+                  value={formData.Name}
                   onChange={handleInputChange}
                   required
                 />
@@ -172,8 +169,8 @@ const BusinessForm = () => {
                 <label>Capacity *</label>
                 <input
                   type="number"
-                  name="venueCapacity"
-                  value={formData.venueCapacity}
+                  name="Capacity"
+                  value={formData.Capacity}
                   onChange={handleInputChange}
                   required
                 />
@@ -182,8 +179,8 @@ const BusinessForm = () => {
                 <label>Price per Plate *</label>
                 <input
                   type="number"
-                  name="venuePricePerPlate"
-                  value={formData.venuePricePerPlate}
+                  name="PricePerPlate"
+                  value={formData.PricePerPlate}
                   onChange={handleInputChange}
                   required
                 />
@@ -191,8 +188,8 @@ const BusinessForm = () => {
               <div className="business-form__input-group">
                 <label>Description *</label>
                 <textarea
-                  name="venueDescription"
-                  value={formData.venueDescription}
+                  name="Description"
+                  value={formData.Description}
                   onChange={handleInputChange}
                   required
                 />
@@ -201,8 +198,8 @@ const BusinessForm = () => {
                 <label>City *</label>
                 <input
                   type="text"
-                  name="venueCity"
-                  value={formData.venueCity}
+                  name="City"
+                  value={formData.City}
                   onChange={handleInputChange}
                   required
                 />
@@ -211,8 +208,8 @@ const BusinessForm = () => {
                 <label>Address *</label>
                 <input
                   type="text"
-                  name="venueAddress"
-                  value={formData.venueAddress}
+                  name="Address"
+                  value={formData.Address}
                   onChange={handleInputChange}
                   required
                 />
@@ -221,8 +218,8 @@ const BusinessForm = () => {
                 <label>Best for Event Types *</label>
                 <input
                   type="text"
-                  name="venueBestForEventTypes"
-                  value={formData.venueBestForEventTypes}
+                  name="BestForEventTypes"
+                  value={formData.BestForEventTypes}
                   onChange={handleInputChange}
                   required
                 />
@@ -231,8 +228,8 @@ const BusinessForm = () => {
                 <label>Food Type *</label>
                 <input
                   type="text"
-                  name="venueFoodType"
-                  value={formData.venueFoodType}
+                  name="FoodType"
+                  value={formData.FoodType}
                   onChange={handleInputChange}
                   required
                 />
@@ -241,8 +238,8 @@ const BusinessForm = () => {
                 <label>Amenities *</label>
                 <input
                   type="text"
-                  name="venueAmenities"
-                  value={formData.venueAmenities}
+                  name="Amenities"
+                  value={formData.Amenities}
                   onChange={handleInputChange}
                   required
                 />
@@ -251,8 +248,8 @@ const BusinessForm = () => {
                 <label>Website</label>
                 <input
                   type="text"
-                  name="venueWebsite"
-                  value={formData.venueWebsite}
+                  name="Website"
+                  value={formData.Website}
                   onChange={handleInputChange}
                 />
               </div>
@@ -260,8 +257,8 @@ const BusinessForm = () => {
                 <label>Twitter</label>
                 <input
                   type="text"
-                  name="venueTwitter"
-                  value={formData.venueTwitter}
+                  name="Twitter"
+                  value={formData.Twitter}
                   onChange={handleInputChange}
                 />
               </div>
@@ -269,8 +266,8 @@ const BusinessForm = () => {
                 <label>Instagram</label>
                 <input
                   type="text"
-                  name="venueInstagram"
-                  value={formData.venueInstagram}
+                  name="Instagram"
+                  value={formData.Instagram}
                   onChange={handleInputChange}
                 />
               </div>
@@ -278,7 +275,7 @@ const BusinessForm = () => {
                 <label>Upload Venue Images</label>
                 <input
                   type="file"
-                  name="venueImages"
+                  name="Photos"
                   multiple
                   onChange={handleImageChange}
                 />
@@ -292,11 +289,26 @@ const BusinessForm = () => {
             <div className="business-form__card">
               <h3 className="business-form__card-heading">Vendor Details</h3>
               <div className="business-form__input-group">
+                <label>Service Type *</label>
+                <select
+                  name="ServiceType"
+                  value={formData.ServiceType}
+                  onChange={handleInputChange}
+                  required
+                >
+                  {services.map((service, index) => (
+                    <option key={index} value={service}>
+                      {service}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="business-form__input-group">
                 <label>Service Name *</label>
                 <input
                   type="text"
-                  name="businessName"
-                  value={formData.businessName}
+                  name="ServiceName"
+                  value={formData.ServiceName}
                   onChange={handleInputChange}
                   required
                 />
@@ -305,8 +317,8 @@ const BusinessForm = () => {
                 <label>Service Area *</label>
                 <input
                   type="text"
-                  name="serviceArea"
-                  value={formData.serviceArea}
+                  name="ServiceArea"
+                  value={formData.ServiceArea}
                   onChange={handleInputChange}
                   required
                 />
@@ -315,17 +327,17 @@ const BusinessForm = () => {
                 <label>Price *</label>
                 <input
                   type="number"
-                  name="price"
-                  value={formData.price}
+                  name="Price"
+                  value={formData.Price}
                   onChange={handleInputChange}
                   required
                 />
               </div>
               <div className="business-form__input-group">
-                <label>Upload Vendor Images</label>
+                <label>Upload Service Images</label>
                 <input
                   type="file"
-                  name="vendorImages"
+                  name="Images"
                   multiple
                   onChange={handleImageChange}
                 />
@@ -333,8 +345,7 @@ const BusinessForm = () => {
             </div>
           </>
         )}
-
-        <button type="submit" className="business-form__submit-btn">
+        <button type="submit" className="business-form__submit-button">
           Submit
         </button>
       </form>
