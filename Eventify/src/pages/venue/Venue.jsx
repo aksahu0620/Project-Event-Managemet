@@ -12,7 +12,7 @@ const VenueSearch = () => {
   const [selectedOccasion, setSelectedOccasion] = useState("");
   const [selectedVenue, setSelectedVenue] = useState(null);
   const [showBooking, setShowBooking] = useState(false);
-  
+
   const navigate = useNavigate(); // Initialize navigate
 
   const handleBookNow = (venue) => {
@@ -57,11 +57,23 @@ const VenueSearch = () => {
       venue.description.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesType = selectedType ? venue.type === selectedType : true;
-    const matchesBudget = selectedBudget ? venue.budget === selectedBudget : true;
-    const matchesRegion = selectedRegion ? venue.location === selectedRegion : true;
-    const matchesOccasion = selectedOccasion ? venue.occasion === selectedOccasion : true;
+    const matchesBudget = selectedBudget
+      ? venue.budget === selectedBudget
+      : true;
+    const matchesRegion = selectedRegion
+      ? venue.location === selectedRegion
+      : true;
+    const matchesOccasion = selectedOccasion
+      ? venue.occasion === selectedOccasion
+      : true;
 
-    return matchesSearchTerm && matchesType && matchesBudget && matchesRegion && matchesOccasion;
+    return (
+      matchesSearchTerm &&
+      matchesType &&
+      matchesBudget &&
+      matchesRegion &&
+      matchesOccasion
+    );
   });
 
   return (

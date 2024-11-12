@@ -196,7 +196,6 @@ const VendorSearch = ({ userLoggedIn }) => {
                     e.preventDefault(); // Prevent the default form submission
                     handleBookNow(vendor);
                   }}
-                  disabled={!userLoggedIn} // Button disabled if user is not logged in
                 >
                   Book Now
                 </button>
