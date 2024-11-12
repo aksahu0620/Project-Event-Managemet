@@ -1,33 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Vendor.css";
-import VendorData from "../../Context/VendorData";
 import BookingVendor from "../../components/BookingVendor/BookingVendor";
 
-const VendorSearch = ({ userLoggedIn }) => {
-  // State for managing search input and filter selections
+const VendorSearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedServiceType, setSelectedServiceType] = useState("");
   const [selectedRating, setSelectedRating] = useState("");
-  const [selectedVendor, setSelectedVendor] = useState(null); // State to manage selected vendor
-  const [showBooking, setShowBooking] = useState(false); // State to control booking visibility
+  const [selectedVendor, setSelectedVendor] = useState(null);
+  const [showBooking, setShowBooking] = useState(false);
+  const [vendors, setVendors] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch data from API on component mount
+    const fetchVendors = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/services");
+        const data = await response.json();
+        
+        // Transforming API data to fit required fields
+        const formattedData = data.map(vendor => ({
+          id: vendor.ServiceID,
+          name: vendor.ServiceName,
+          description: "Service provided by vendor",
+          location: vendor.ServiceArea || "Unknown Location",
+          serviceType: vendor.ServiceType || "General",
+          priceRange: vendor.Price || "0.00",
+          rating: 0, // Default rating if not in response
+          reviews: 0, // Default number of reviews
+          images: vendor.Images ? vendor.Images.split(",") : ["default.jpg"],
+          customerReviews: [], // Default empty array if no reviews
+          status: vendor.Status || "Pending",
+        }));
+
+        setVendors(formattedData);
+      } catch (error) {
+        console.error("Failed to fetch vendors", error);
+      }
+    };
+
+    fetchVendors();
+  }, []);
 
   const handleBookNow = (vendor) => {
-    if (userLoggedIn) {
+    const token = localStorage.getItem("token");
+
+    if (token) {
       setSelectedVendor(vendor);
-      setShowBooking(true); // Show the booking component
+      setShowBooking(true);
     } else {
-      alert("Please log in to book this vendor.");
+      alert("Please log in to proceed with the booking.");
+      navigate("/signin");
     }
   };
 
   const handleCloseBooking = () => {
     setShowBooking(false);
-    setSelectedVendor(null); // Reset selected vendor
+    setSelectedVendor(null);
   };
 
-  // Dummy data for filters
   const filterOptions = {
     price: [
       { label: "Under 40000", range: [0, 40000] },
@@ -40,8 +75,7 @@ const VendorSearch = ({ userLoggedIn }) => {
     rating: [1, 2, 3, 4, 5],
   };
 
-  // Filter vendors based on search term and selected filters
-  const filteredVendors = VendorData.filter((vendor) => {
+  const filteredVendors = vendors.filter((vendor) => {
     const matchesSearchTerm =
       vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vendor.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -87,7 +121,7 @@ const VendorSearch = ({ userLoggedIn }) => {
         <div className="filter-card">
           <h3 className="filter-card__title">Filter Your Search</h3>
 
-          {/* By Price Range */}
+          {/* Price Filter */}
           <div className="filter-card__option filter-card__option--price">
             <h4 className="filter-card__option-title">By Price Range</h4>
             {filterOptions.price.map((price) => (
@@ -104,7 +138,7 @@ const VendorSearch = ({ userLoggedIn }) => {
             ))}
           </div>
 
-          {/* By Location */}
+          {/* Location Filter */}
           <div className="filter-card__option">
             <h4 className="filter-card__option-title">By Location</h4>
             {filterOptions.location.map((location) => (
@@ -121,7 +155,7 @@ const VendorSearch = ({ userLoggedIn }) => {
             ))}
           </div>
 
-          {/* By Service Type */}
+          {/* Service Type Filter */}
           <div className="filter-card__option">
             <h4 className="filter-card__option-title">By Service Type</h4>
             {filterOptions.serviceType.map((service) => (
@@ -138,7 +172,7 @@ const VendorSearch = ({ userLoggedIn }) => {
             ))}
           </div>
 
-          {/* By Rating */}
+          {/* Rating Filter */}
           <div className="filter-card__option">
             <h4 className="filter-card__option-title">By Rating</h4>
             {filterOptions.rating.map((rating) => (
@@ -193,7 +227,7 @@ const VendorSearch = ({ userLoggedIn }) => {
                 <button
                   className="vendor-card__book-btn"
                   onClick={(e) => {
-                    e.preventDefault(); // Prevent the default form submission
+                    e.preventDefault();
                     handleBookNow(vendor);
                   }}
                 >
@@ -205,7 +239,6 @@ const VendorSearch = ({ userLoggedIn }) => {
         ))}
       </main>
 
-      {/* Render BookingComponent as a Popup */}
       {showBooking && selectedVendor && (
         <BookingVendor vendor={selectedVendor} onClose={handleCloseBooking} />
       )}

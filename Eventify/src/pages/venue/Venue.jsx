@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Venue.css";
-import VenueData from "../../Context/VenueData";
 import BookingComponent from "../../components/Booking/BookingComponent";
 
 const VenueSearch = () => {
@@ -12,15 +11,53 @@ const VenueSearch = () => {
   const [selectedOccasion, setSelectedOccasion] = useState("");
   const [selectedVenue, setSelectedVenue] = useState(null);
   const [showBooking, setShowBooking] = useState(false);
+  const [venues, setVenues] = useState([]); // State to hold fetched venues
 
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchVenues = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/venues");
+        const data = await response.json();
+        
+        // Transform data to match component fields and set default values
+        const transformedData = data.map(venue => ({
+          id: venue.VenueID,
+          name: venue.Name || "Unnamed Venue",
+          address: venue.Address || "No Address Provided",
+          city: venue.City || "Unknown City",
+          guestCapacity: venue.Capacity || "N/A",
+          type: venue.FoodType || "Unknown Type",
+          budget: venue.PricePerPlate || "Unknown Price",
+          location: venue.City || "Unknown Location",
+          occasion: venue.BestForEventTypes || "General",
+          description: venue.Description || "No Description Available",
+          amenities: venue.Amenities ? venue.Amenities.split(", ") : ["No Amenities"],
+          images: venue.Photos ? venue.Photos.split(",") : ["placeholder.jpg"],
+          contactNumber: "Not Provided",
+          rating: venue.Rating || 0,
+          reviews: venue.Reviews || 0,
+          customerReviews: venue.CustomerReviews || [],
+          views: venue.Views || 0,
+          rooms: venue.Rooms || 0,
+          alcoholServed: venue.AlcoholServed || "No",
+        }));
+        
+        setVenues(transformedData);
+      } catch (error) {
+        console.error("Error fetching venues:", error);
+      }
+    };
+
+    fetchVenues();
+  }, []);
 
   const handleBookNow = (venue) => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       alert("Please log in to book a venue.");
-      navigate("/login"); // Redirect to login page if not logged in
+      navigate("/signin");
       return;
     }
 
@@ -35,37 +72,20 @@ const VenueSearch = () => {
 
   const filterOptions = {
     type: ["Pure Veg", "Veg & NonVeg Both"],
-    budget: [
-      "Under 400",
-      "401 to 600",
-      "601 to 800",
-      "801 to 1000",
-      "1001 to 1200",
-    ],
+    budget: ["Under 400", "401 to 600", "601 to 800", "801 to 1000", "1001 to 1200"],
     region: ["Bairagarh", "Lalghati", "Kolar", "Minal", "MP Nagar"],
-    occasion: [
-      "Family Get Together",
-      "Birthday Party",
-      "Engagement",
-      "Wedding",
-    ],
+    occasion: ["Family Get Together", "Birthday Party", "Engagement", "Wedding"],
   };
 
-  const filteredVenues = VenueData.filter((venue) => {
+  const filteredVenues = venues.filter((venue) => {
     const matchesSearchTerm =
       venue.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       venue.description.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesType = selectedType ? venue.type === selectedType : true;
-    const matchesBudget = selectedBudget
-      ? venue.budget === selectedBudget
-      : true;
-    const matchesRegion = selectedRegion
-      ? venue.location === selectedRegion
-      : true;
-    const matchesOccasion = selectedOccasion
-      ? venue.occasion === selectedOccasion
-      : true;
+    const matchesBudget = selectedBudget ? venue.budget === selectedBudget : true;
+    const matchesRegion = selectedRegion ? venue.location === selectedRegion : true;
+    const matchesOccasion = selectedOccasion ? venue.occasion.includes(selectedOccasion) : true;
 
     return (
       matchesSearchTerm &&
@@ -159,26 +179,15 @@ const VenueSearch = () => {
       <main className="venue-search__results">
         {filteredVenues.map((venue) => (
           <div className="venue-card2" key={venue.id}>
-            <img
-              src={venue.images[0]}
-              alt={venue.name}
-              className="venue-card__image"
-            />
+            <img src={venue.images[0]} alt={venue.name} className="venue-card__image" />
             <div className="venue-card-detail">
               <h3 className="venue-card__name">{venue.name}</h3>
               <p className="venue-card__description">
                 Location: {venue.location} <br />
                 Address: {venue.address}
               </p>
-              <p className="venue-card__description">
-                Guest Capacity: {venue.guestCapacity}
-              </p>
-              <p className="venue-card__description">
-                Veg Price: {venue.vegPrice}
-              </p>
-              <p className="venue-card__description">
-                Non-Veg Price: {venue.nonVegPrice}
-              </p>
+              <p className="venue-card__description">Guest Capacity: {venue.guestCapacity}</p>
+              <p className="venue-card__description">Veg Price: {venue.budget}</p>
               <p className="venue-card__description">
                 Rooms: {venue.rooms} <br />
                 Alcohol Served: {venue.alcoholServed}
@@ -187,7 +196,6 @@ const VenueSearch = () => {
                 Rating: {venue.rating}⭐ ({venue.reviews} Reviews)
               </p>
               <p className="venue-card__description">
-                Views: {venue.views} <br />
                 Type: {venue.type} <br />
                 Occasion: {venue.occasion}
               </p>
@@ -195,28 +203,16 @@ const VenueSearch = () => {
               <p className="venue-card__description">
                 Amenities: {venue.amenities.join(", ")}
               </p>
-              <p className="venue-card__description">
-                Contact Number: {venue.contactNumber}
-              </p>
-              <div className="venue-card__reviews">
-                <h4>Customer Reviews:</h4>
-                {venue.customerReviews.map((review, index) => (
-                  <p key={index}>
-                    <strong>{review.name}:</strong> {review.review}
-                  </p>
-                ))}
-              </div>
-              <form className="venue-card__form">
-                <button
-                  className="venue-card__book-btn"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleBookNow(venue);
-                  }}
-                >
-                  Book Now
-                </button>
-              </form>
+              <p className="venue-card__description">Contact Number: {venue.contactNumber}</p>
+              <button
+                className="venue-card__book-btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleBookNow(venue);
+                }}
+              >
+                Book Now
+              </button>
             </div>
           </div>
         ))}
