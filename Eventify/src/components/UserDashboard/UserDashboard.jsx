@@ -5,7 +5,8 @@ import UserProfile from "../UserProfile/UserProfile";
 const UserDashboard = ({ userName }) => {
   const [venues, setVenues] = useState([
     {
-      date: "2024-11-09",
+      name: "Royal banquet hall",
+      date: "2024-11-14",
       occasion: "Wedding",
       guests: 100,
       budget: "50000",
@@ -13,9 +14,10 @@ const UserDashboard = ({ userName }) => {
       status: "Confirmed",
     },
     {
-      date: "2024-11-15",
-      occasion: "Birthday",
-      guests: 50,
+      name : "Green lawn",
+      date: "2024-11-14",
+      occasion: "Wedding",
+      guests: 100,
       budget: "20000",
       city: "Mumbai",
       status: "Pending",
@@ -24,13 +26,13 @@ const UserDashboard = ({ userName }) => {
 
   const [vendors, setVendors] = useState([
     {
-      name: "Dang Photography",
+      name: "Delux catering",
       location: "Rohini, Delhi",
       startingPrice: "40000",
       services: "Photography, Videography",
     },
     {
-      name: "Royal Catering",
+      name: "Event photography",
       location: "South Delhi",
       startingPrice: "50000",
       services: "Catering, Decor",
@@ -79,6 +81,9 @@ const UserDashboard = ({ userName }) => {
         <div className="venue-list">
           {venues.map((venue, index) => (
             <div className="venue-item" key={index}>
+              <div className="venue-field">
+                Name: <span>{venue.name}</span>
+              </div>
               <div className="venue-field">
                 Date: <span>{venue.date}</span>
               </div>

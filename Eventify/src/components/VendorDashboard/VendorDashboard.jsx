@@ -11,8 +11,8 @@ const VendorDashboard = () => {
       price: "10000",
       services: "Catering, Decoration",
       booked: true,
-      bookingDate: "2024-12-15",
-      capacity: 300,
+      bookingDate: "2024-11-14",
+      capacity: 100,
       amenities: "Chairs, Tables, Decorations, Wait Staff",
     },
     {
@@ -22,8 +22,8 @@ const VendorDashboard = () => {
       price: "5000",
       services: "DJ, Lighting",
       booked: false,
-      bookingDate: "",
-      capacity: 500,
+      bookingDate: "2024-11-14",
+      capacity: 100,
       amenities: "Speakers, Lighting Equipment",
     },
   ]);

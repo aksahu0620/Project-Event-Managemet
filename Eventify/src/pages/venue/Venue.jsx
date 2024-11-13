@@ -2,6 +2,31 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Venue.css";
 import BookingComponent from "../../components/Booking/BookingComponent";
+import VenueData from "../../Context/VenueData";
+
+
+const img = [
+  { image: "https://imgs.search.brave.com/qHT_4VT_JczDPYoiOxIpRM-EkGRl7IpbUvFYv-_Z2P4/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/dG91cm15aW5kaWEu/Y29tL2Jsb2cvL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDE2LzA0/L0x1eHVyeS1XZWRk/aW5nLURlc3RpbmF0/aW9uLmpwZw" },
+  { image: "https://imgs.search.brave.com/RQs7pmPkm5JdP9DaWb8p9lvrlTFC-kzmICELZ4A3Cb4/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/dG91cm15aW5kaWEu/Y29tL2Jsb2cvL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDE2LzA0/L1BhbGFjZS1Hcm91/bmQuanBn" },
+  { image: "https://imgs.search.brave.com/4WGknjsYSwNrmDC3M32UzQvB3k2aSLvRWqUB9FaVNU0/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/dG91cm15aW5kaWEu/Y29tL2Jsb2cvL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDE2LzA0/L0xhbGl0LUxheG1p/LVZpbGFzLmpwZw" },
+  { image: "https://imgs.search.brave.com/vWYGqCZo9gTDB5GKCBoi8PAZ2arzZGZCbNyngQJMr-E/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/dG91cm15aW5kaWEu/Y29tL2Jsb2cvL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDE2LzA0/L0xlZWxhLVBhbGFj/ZS5qcGc" },
+  { image: "https://imgs.search.brave.com/pRWsSaU4g7LLaVNlWSnqDzEYAmwyrd0YtwiskdvP5e4/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/dG91cm15aW5kaWEu/Y29tL2Jsb2cvL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDE2LzA0/L0ZhdGVoLVByYWth/c2gtUGFsYWNlLmpw/Zw" },
+  { image: "https://imgs.search.brave.com/w053pDeCrKjRFGqBx_uj65XEiijWyeh3M4LYhYULIKg/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuZWFzeXdlZGRp/bmdzLmNvbS9maWxl/cy8yMDIxLzEwLzMw/MTAzMDQwL0RyYXBl/cnMtSGFsbC1XZWRk/aW5nLVZlbnVlLUxp/dmVyeS1IYS04OTB4/NTY3LmpwZw" },
+  { image: "https://imgs.search.brave.com/avDbqjw0-YryMFWl3DUE5SLDK88vHE5se5E0ZiXGnB8/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pMC53/cC5jb20vd3d3LnRo/ZXdlZGRpbmd2b3dz/Zy5jb20vd3AtY29u/dGVudC91cGxvYWRz/LzIwMjAvMDQvRmFp/cm1vbnQtSmFpcHVy/LUluZGlhLVdlZGRp/bmctVmVudWVzLmpw/Zz9yZXNpemU9OTYw/LDQwOCZzc2w9MQ" },
+  { image: "https://imgs.search.brave.com/GUkKux1UtTCRSkfB5CBB0KZb7ge6HMIf0-0obSzPsWo/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuZWFzeXdlZGRp/bmdzLmNvbS9maWxl/cy8yMDIxLzEwLzI5/MjMzOTQxL211c2V1/bS1vZi1sb25kb24t/aW5kaWFuLXdlZGRp/bmctdmVudWVzLWxv/bmRvbi5qcGc" },
+  { image: "https://imgs.search.brave.com/F4GAVm48XL5kdXQ5D2CmnkWx9w3f7LgkbFTHonvfr2g/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/dG91cm15aW5kaWEu/Y29tL2Jsb2cvL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDE2LzA0/L0RldmktR2FyaC1i/eS1MZWJ1YS5qcGc" },
+  { image: "https://example.com/image10.jpg" },
+  { image: "https://example.com/image11.jpg" },
+  { image: "https://example.com/image12.jpg" },
+  { image: "https://example.com/image13.jpg" },
+  { image: "https://example.com/image14.jpg" },
+  { image: "https://example.com/image15.jpg" },
+  { image: "https://example.com/image16.jpg" },
+  { image: "https://example.com/image17.jpg" },
+  { image: "https://example.com/image18.jpg" },
+  { image: "https://example.com/image19.jpg" },
+  { image: "https://example.com/image20.jpg" }
+];
 
 const VenueSearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,7 +45,7 @@ const VenueSearch = () => {
       try {
         const response = await fetch("http://localhost:5000/api/venues");
         const data = await response.json();
-        
+
         // Transform data to match component fields and set default values
         const transformedData = data.map(venue => ({
           id: venue.VenueID,
@@ -35,15 +60,15 @@ const VenueSearch = () => {
           description: venue.Description || "No Description Available",
           amenities: venue.Amenities ? venue.Amenities.split(", ") : ["No Amenities"],
           images: venue.Photos ? venue.Photos.split(",") : ["placeholder.jpg"],
-          contactNumber: "Not Provided",
-          rating: venue.Rating || 0,
-          reviews: venue.Reviews || 0,
+          contactNumber: "7421458545",
+          rating: venue.Rating || 4,
+          reviews: venue.Reviews || 235,
           customerReviews: venue.CustomerReviews || [],
           views: venue.Views || 0,
-          rooms: venue.Rooms || 0,
+          rooms: venue.Rooms || "20+",
           alcoholServed: venue.AlcoholServed || "No",
         }));
-        
+
         setVenues(transformedData);
       } catch (error) {
         console.error("Error fetching venues:", error);
@@ -71,11 +96,13 @@ const VenueSearch = () => {
   };
 
   const filterOptions = {
-    type: ["Pure Veg", "Veg & NonVeg Both"],
-    budget: ["Under 400", "401 to 600", "601 to 800", "801 to 1000", "1001 to 1200"],
-    region: ["Bairagarh", "Lalghati", "Kolar", "Minal", "MP Nagar"],
-    occasion: ["Family Get Together", "Birthday Party", "Engagement", "Wedding"],
+    type: ["Veg", "Both"],
+    budget: ["150.50", "300.00", "500.00", "800.00", "1000.00"],
+
+    region: ["Delhi", "Mumbai", "Bhopal", "Kolkata", "Chennai"],
+    occasion: ["Corporate", "Birthday", "Engagement", "Wedding"],
   };
+
 
   const filteredVenues = venues.filter((venue) => {
     const matchesSearchTerm =
@@ -179,7 +206,7 @@ const VenueSearch = () => {
       <main className="venue-search__results">
         {filteredVenues.map((venue) => (
           <div className="venue-card2" key={venue.id}>
-            <img src={venue.images[0]} alt={venue.name} className="venue-card__image" />
+            <img src={img[venue.id - 1].image} alt={venue.name} className="venue-card__image" />
             <div className="venue-card-detail">
               <h3 className="venue-card__name">{venue.name}</h3>
               <p className="venue-card__description">
@@ -187,7 +214,7 @@ const VenueSearch = () => {
                 Address: {venue.address}
               </p>
               <p className="venue-card__description">Guest Capacity: {venue.guestCapacity}</p>
-              <p className="venue-card__description">Veg Price: {venue.budget}</p>
+              <p className="venue-card__description">Price per plate: {venue.budget}</p>
               <p className="venue-card__description">
                 Rooms: {venue.rooms} <br />
                 Alcohol Served: {venue.alcoholServed}

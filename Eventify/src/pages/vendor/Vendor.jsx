@@ -13,6 +13,29 @@ const VendorSearch = () => {
   const [showBooking, setShowBooking] = useState(false);
   const [vendors, setVendors] = useState([]);
 
+  const img = [
+    { image: "https://imgs.search.brave.com/aSX7a-8ZXJpgfItN7eT-BVtfuLu04QqK6aqYjBG9SAg/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9jZG4w/LndlZGRpbmd3aXJl/LmluL3ZlbmRvci8w/MTQ1LzNfMi82NDAv/anBnL2NhdGVyaW5n/LWJyb3duLXN1Z2Fy/LWNhdGVyaW5nLXNl/dHVwLTFfMTVfMzYw/MTQ1LTE2MDg2NjM2/Mzg4Mzc3Mi5qcGVn" },
+    { image: "https://imgs.search.brave.com/RH8rKrIuG__6Jk6ETPkRh0fwwoDI5U5DdUB_5O2cHzI/rs:fit:500:0:0:0/g:ce/aHR0cDovL3d3dy5n/YWxhY2F0ZXJlcnMu/aW4vaW1hZ2VzL3Nl/cnZpY2VzLWNvcnBv/cmF0ZS5qcGc" },
+    { image: "https://imgs.search.brave.com/wvCgazJH5YboKX1_Mv3ySevm71UDeZJhjZNhKk0oyQc/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9qdWxp/YW5yaWJpbmlrd2Vk/ZGluZ3MuY29tL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDIyLzAy/L3RyYWRpdGlvbmFs/LWluZGlhLXdlZGRp/bmctMTAyNHg2ODMu/anBn" },
+    { image: "https://imgs.search.brave.com/7VGGIOk8o1tNyL6O5eN2w-SugZH0yTJeL674BOq642k/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMubWludGVkLmNv/bS9pbWFnZS91cGxv/YWQvZl9hdXRvLHFf/YXV0by9NaW50ZWRf/T25zaXRlX0Fzc2V0/cy8yMDIyL0xQL0lu/ZGlhbldlZGRpbmdU/cmFkaXRpb25zXzIy/MDgzMV9JbWFnZTAz/LmpwZw" },
+    { image: "https://imgs.search.brave.com/lawf2GyZspx45y6p7XTjWFeaYWUGfMvPTUhwGMQZMC0/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy9k/L2RkL0FfZmFuY3lf/SW5kaWFuX3dlZGRp/bmdfdGFraW5nX3Bs/YWNlX2luX1B1ZHVj/aGVycnksX1RhbWls/X05hZHUsX0luZGlh/LmpwZw" },
+    { image: "https://imgs.search.brave.com/RQLRX4DkkQsbmFZdHqrTOO1myPgsXpM0YWW05s6Anpc/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/YnJpZGVzLmNvbS90/aG1iL1JaMXVRd1pI/bk9FVEFONXJpSFpq/RWNJQzh2dz0vMTUw/MHgwL2ZpbHRlcnM6/bm9fdXBzY2FsZSgp/Om1heF9ieXRlcygx/NTAwMDApOnN0cmlw/X2ljYygpLzU0Mmgt/MTk5NTZjOWU3ODA4/NGRiZGFlYjY3MGMx/OWJiNDI0MzMtOWE3/OTQwMTIwYmNiNDli/Yzg5OTVmMDFiNGFm/MTAxOTMuanBn" },
+    { image: "https://imgs.search.brave.com/BTUrI7WVtvPRDffDAzc2J30nwaYHdELDxmV7RnsYqfI/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly93d3cu/YnJpZGVzLmNvbS90/aG1iL184UjZkMVNs/TGRxLTJIemVfNGt3/eDZKdk1mRT0vMTUw/MHgwL2ZpbHRlcnM6/bm9fdXBzY2FsZSgp/Om1heF9ieXRlcygx/NTAwMDApOnN0cmlw/X2ljYygpL2luZGlh/bi13ZWRkaW5nLUpB/TUVTLVNDSFVMWkUt/MzlmZjJlZGJkYmFi/NDIwZWI0NDAzZTU5/NTY5OGZiOTcuanBn" },
+    { image: "https://imgs.search.brave.com/Yv6P7B16ZpaQtwSQB_Q1sTrDnGaD46hxDijg06xFEjk/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9jZG4w/LndlZGRpbmd3aXJl/LmluL3ZlbmRvci8z/MDMwLzNfMi82NDAv/anBnL2FtaXNoLXRo/YWtrYXItN280MjJ5/Zy1iODAtdW5zcGxh/c2hfMTVfMzgzMDMw/LTE3MDcwNDM3MzM2/MTEwMy5qcGVn" },
+    { image: "https://example.com/image9.jpg" },
+    { image: "https://example.com/image10.jpg" },
+    { image: "https://example.com/image11.jpg" },
+    { image: "https://example.com/image12.jpg" },
+    { image: "https://example.com/image13.jpg" },
+    { image: "https://example.com/image14.jpg" },
+    { image: "https://example.com/image15.jpg" },
+    { image: "https://example.com/image16.jpg" },
+    { image: "https://example.com/image17.jpg" },
+    { image: "https://example.com/image18.jpg" },
+    { image: "https://example.com/image19.jpg" },
+    { image: "https://example.com/image20.jpg" }
+  ];
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,10 +53,10 @@ const VendorSearch = () => {
           location: vendor.ServiceArea || "Unknown Location",
           serviceType: vendor.ServiceType || "General",
           priceRange: vendor.Price || "0.00",
-          rating: 0, // Default rating if not in response
-          reviews: 0, // Default number of reviews
+          rating: 4, // Default rating if not in response
+          reviews: "160+", // Default number of reviews
           images: vendor.Images ? vendor.Images.split(",") : ["default.jpg"],
-          customerReviews: [], // Default empty array if no reviews
+          customerReviews: ["Highly recommanded"], // Default empty array if no reviews
           status: vendor.Status || "Pending",
         }));
 
@@ -46,16 +69,25 @@ const VendorSearch = () => {
     fetchVendors();
   }, []);
 
+
+  // const handleBookNow = (venue) => {
+  //   const token = localStorage.getItem("token");
+  //   if (!token) {
+  //     alert("Please log in to book a venue.");
+  //     navigate("/signin");
+  //     return;
+  //   }
+    
   const handleBookNow = (vendor) => {
     const token = localStorage.getItem("token");
-
-    if (token) {
-      setSelectedVendor(vendor);
-      setShowBooking(true);
-    } else {
-      alert("Please log in to proceed with the booking.");
+    if (!token) {
+      alert("Please log in to book a venue.");
       navigate("/signin");
+      return;
     }
+
+    setSelectedVendor(vendor);
+    setShowBooking(true);
   };
 
   const handleCloseBooking = () => {
@@ -65,13 +97,13 @@ const VendorSearch = () => {
 
   const filterOptions = {
     price: [
-      { label: "Under 40000", range: [0, 40000] },
-      { label: "40001 to 60000", range: [40001, 60000] },
-      { label: "60001 to 70000", range: [60001, 70000] },
-      { label: "70001 to 90000", range: [70001, 90000] },
+      { label: "Under 1500", range: [0, 1500] },
+      { label: "1500 to 3000", range: [1500, 3000] },
+      { label: "3000 to 4000", range: [3000, 4000] },
+      { label: "4000 to 5000", range: [4000, 5000] },
     ],
-    location: ["MP Nagar", "Lalghati", "Bairagarh", "Kolar"],
-    serviceType: ["Catering", "Decoration", "Photography", "Entertainment"],
+    location: ["Delhi", "Mumbai", "Kolkata", "Bhopal"],
+    serviceType: ["Catering", "Decoration", "Photography", "Mahendi Artist"],
     rating: [1, 2, 3, 4, 5],
   };
 
@@ -197,7 +229,7 @@ const VendorSearch = () => {
         {filteredVendors.map((vendor) => (
           <div className="vendor-card" key={vendor.id}>
             <img
-              src={vendor.images[0]}
+              src={img[vendor.id -1].image}
               alt={vendor.name}
               className="vendor-card__image"
             />

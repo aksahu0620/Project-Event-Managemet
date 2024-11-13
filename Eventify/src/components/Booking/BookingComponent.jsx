@@ -117,7 +117,7 @@ const BookingComponent = ({ venue, onClose }) => {
           />
         </div>
         <div>
-          <p>Total Price: ₹{venue.pricePerPlate * guests}</p>
+          <p>Total Price {venue.budget * guests}</p>
         </div>
         <button type="submit">Pay Now</button>
       </form>

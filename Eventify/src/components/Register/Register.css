@@ -106,6 +106,10 @@ input[type="password"]:focus {
   outline: none;
 }
 
+.error-message{
+  color: red;
+}
+
 .sign-in-button {
   width: 100%;
   padding: 12px;

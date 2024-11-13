@@ -10,7 +10,7 @@ const BookingVendor = ({ vendor, onClose }) => {
   const [paymentProcessing, setPaymentProcessing] = useState(false); // State for dummy payment
   const [bookingConfirmed, setBookingConfirmed] = useState(false); // State for booking confirmation
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Simulating user login state
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // Simulating user login state
   const navigate = useNavigate(); // React Router hook for redirection
 
   // Function to validate date input (must be at least tomorrow's date)
@@ -18,6 +18,9 @@ const BookingVendor = ({ vendor, onClose }) => {
   const minDate = new Date(today.setDate(today.getDate() + 1))
     .toISOString()
     .split("T")[0];
+
+  // setIsLoggedIn(localStorage.getItem("token"))   
+
 
   const handleAddToCart = (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -122,7 +125,7 @@ const BookingVendor = ({ vendor, onClose }) => {
           />
         </div>
         <div>
-          <p>Total Price: ₹{vendor.pricePerPlate * guests}</p>
+          <p>Total Price: ₹{vendor.priceRange}</p>
         </div>
         <button type="submit">Pay Now</button>
       </form>
