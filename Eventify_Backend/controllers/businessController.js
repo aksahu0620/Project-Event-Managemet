@@ -1,5 +1,5 @@
 import pool from '../config/db.js';
-import cloudinary from '../config/cloudinary.js';
+import {cloudinary} from '../config/cloudinary.js';
 
 // Helper: Upload multiple images to Cloudinary
 const uploadImages = async (images) => {

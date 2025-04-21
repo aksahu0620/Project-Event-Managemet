@@ -4,30 +4,10 @@ import axios from "axios";
 
 const BusinessForm = () => {
   const [selectedService, setSelectedService] = useState("");
-  const [formData, setFormData] = useState({
-    ServiceType: "",
-    ServiceName: "",
-    ServiceArea: "",
-    Price: "",
-    Name: "",
-    Capacity: "",
-    PricePerPlate: "",
-    Description: "",
-    City: "",
-    Address: "",
-    BestForEventTypes: "",
-    FoodType: "",
-    Amenities: "",
-    Website: "",
-    Twitter: "",
-    Instagram: "",
-    Photos: [],
-    Images: [],
-  });
+  const [formData, setFormData] = useState(getInitialFormData());
 
-  const handleServiceSelection = (e) => {
-    setSelectedService(e.target.value);
-    setFormData({
+  function getInitialFormData() {
+    return {
       ServiceType: "",
       ServiceName: "",
       ServiceArea: "",
@@ -46,22 +26,26 @@ const BusinessForm = () => {
       Instagram: "",
       Photos: [],
       Images: [],
-    });
+    };
+  }
+
+  const handleServiceSelection = (e) => {
+    setSelectedService(e.target.value);
+    setFormData(getInitialFormData());
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e) => {
     const { name, files } = e.target;
-    setFormData({ ...formData, [name]: files });
+    setFormData((prev) => ({ ...prev, [name]: files }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -77,26 +61,16 @@ const BusinessForm = () => {
     try {
       const data = new FormData();
 
-      if (selectedService === "venue") {
-        Object.entries(formData).forEach(([key, value]) => {
-          if (key !== "Photos" && key !== "Images") {
-            data.append(key, value);
-          }
-        });
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === "Photos" || key === "Images") return;
+        data.append(key, value);
+      });
 
-        for (let i = 0; i < formData.Photos.length; i++) {
-          data.append("Photos", formData.Photos[i]);
-        }
-      } else if (selectedService === "vendor") {
-        Object.entries(formData).forEach(([key, value]) => {
-          if (key !== "Photos" && key !== "Images") {
-            data.append(key, value);
-          }
-        });
+      const imageKey = selectedService === "venue" ? "Photos" : "Images";
+      const images = formData[imageKey];
 
-        for (let i = 0; i < formData.Images.length; i++) {
-          data.append("Images", formData.Images[i]);
-        }
+      for (let i = 0; i < images.length; i++) {
+        data.append(imageKey, images[i]);
       }
 
       const response = await axios.post(url, data, {
@@ -108,6 +82,8 @@ const BusinessForm = () => {
 
       if (response.status === 201) {
         alert("Form submitted successfully!");
+        setFormData(getInitialFormData());
+        setSelectedService("");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -116,10 +92,11 @@ const BusinessForm = () => {
   };
 
   const services = [
-    "Catering", "Photography", "Videography", "Music Band", "Decoration", "Event Planning",
-    "Transportation", "Security Services", "Lighting Services", "Sound Equipment Rental",
-    "Venue Booking", "Makeup Artist", "Florist", "Baker", "Rentals", "Bartending", "DJ Services",
-    "MC Services", "Graphic Design", "Social Media Management",
+    "Catering", "Photography", "Videography", "Music Band", "Decoration",
+    "Event Planning", "Transportation", "Security Services", "Lighting Services",
+    "Sound Equipment Rental", "Venue Booking", "Makeup Artist", "Florist",
+    "Baker", "Rentals", "Bartending", "DJ Services", "MC Services",
+    "Graphic Design", "Social Media Management",
   ];
 
   return (
@@ -152,202 +129,119 @@ const BusinessForm = () => {
 
       <form onSubmit={handleSubmit} className="business-form__service-form">
         {selectedService === "venue" && (
-          <>
-            <div className="business-form__card">
-              <h3 className="business-form__card-heading">Venue Details</h3>
-              <div className="business-form__input-group">
-                <label>Venue Name *</label>
-                <input
-                  type="text"
-                  name="Name"
-                  value={formData.Name}
-                  onChange={handleInputChange}
-                  required
-                />
+          <div className="business-form__card">
+            <h3 className="business-form__card-heading">Venue Details</h3>
+            {[
+              ["Venue Name *", "Name"],
+              ["Capacity *", "Capacity", "number"],
+              ["Price per Plate", "PricePerPlate", "number"],
+              ["Description", "Description", "textarea"],
+              ["City *", "City"],
+              ["Address *", "Address"],
+              ["Best for Event Types", "BestForEventTypes"],
+              ["Amenities", "Amenities"],
+              ["Website", "Website"],
+              ["Twitter", "Twitter"],
+              ["Instagram", "Instagram"],
+            ].map(([label, name, type = "text"]) => (
+              <div className="business-form__input-group" key={name}>
+                <label>{label}</label>
+                {type === "textarea" ? (
+                  <textarea
+                    name={name}
+                    value={formData[name]}
+                    onChange={handleInputChange}
+                    required
+                  />
+                ) : (
+                  <input
+                    type={type}
+                    name={name}
+                    value={formData[name]}
+                    onChange={handleInputChange}
+                    required
+                  />
+                )}
               </div>
-              <div className="business-form__input-group">
-                <label>Capacity *</label>
-                <input
-                  type="number"
-                  name="Capacity"
-                  value={formData.Capacity}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Price per Plate *</label>
-                <input
-                  type="number"
-                  name="PricePerPlate"
-                  value={formData.PricePerPlate}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Description *</label>
-                <textarea
-                  name="Description"
-                  value={formData.Description}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>City *</label>
-                <input
-                  type="text"
-                  name="City"
-                  value={formData.City}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Address *</label>
-                <input
-                  type="text"
-                  name="Address"
-                  value={formData.Address}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Best for Event Types *</label>
-                <input
-                  type="text"
-                  name="BestForEventTypes"
-                  value={formData.BestForEventTypes}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Food Type *</label>
-                <input
-                  type="text"
-                  name="FoodType"
-                  value={formData.FoodType}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Amenities *</label>
-                <input
-                  type="text"
-                  name="Amenities"
-                  value={formData.Amenities}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Website</label>
-                <input
-                  type="text"
-                  name="Website"
-                  value={formData.Website}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Twitter</label>
-                <input
-                  type="text"
-                  name="Twitter"
-                  value={formData.Twitter}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Instagram</label>
-                <input
-                  type="text"
-                  name="Instagram"
-                  value={formData.Instagram}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Upload Venue Images</label>
-                <input
-                  type="file"
-                  name="Photos"
-                  multiple
-                  onChange={handleImageChange}
-                />
-              </div>
+            ))}
+            <div className="business-form__input-group">
+              <label>Food Type</label>
+              <select
+                name="FoodType"
+                value={formData.FoodType}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select Food Type</option>
+                <option value="Veg">Veg</option>
+                <option value="Non-Veg">Non-Veg</option>
+                <option value="Both">Both</option>
+              </select>
             </div>
-          </>
+            <div className="business-form__input-group">
+              <label>Upload Venue Images</label>
+              <input
+                type="file"
+                name="Photos"
+                multiple
+                onChange={handleImageChange}
+              />
+            </div>
+          </div>
         )}
 
         {selectedService === "vendor" && (
-          <>
-            <div className="business-form__card">
-              <h3 className="business-form__card-heading">Vendor Details</h3>
-              <div className="business-form__input-group">
-                <label>Service Type *</label>
-                <select
-                  name="ServiceType"
-                  value={formData.ServiceType}
-                  onChange={handleInputChange}
-                  required
-                >
-                  {services.map((service, index) => (
-                    <option key={index} value={service}>
-                      {service}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="business-form__input-group">
-                <label>Service Name *</label>
-                <input
-                  type="text"
-                  name="ServiceName"
-                  value={formData.ServiceName}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Service Area *</label>
-                <input
-                  type="text"
-                  name="ServiceArea"
-                  value={formData.ServiceArea}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Price *</label>
-                <input
-                  type="number"
-                  name="Price"
-                  value={formData.Price}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="business-form__input-group">
-                <label>Upload Service Images</label>
-                <input
-                  type="file"
-                  name="Images"
-                  multiple
-                  onChange={handleImageChange}
-                />
-              </div>
+          <div className="business-form__card">
+            <h3 className="business-form__card-heading">Vendor Details</h3>
+            <div className="business-form__input-group">
+              <label>Service Type *</label>
+              <select
+                name="ServiceType"
+                value={formData.ServiceType}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select Service</option>
+                {services.map((service, index) => (
+                  <option key={index} value={service}>
+                    {service}
+                  </option>
+                ))}
+              </select>
             </div>
-          </>
+            {[
+              ["Service Name *", "ServiceName"],
+              ["Service Area *", "ServiceArea"],
+              ["Price *", "Price", "number"],
+            ].map(([label, name, type = "text"]) => (
+              <div className="business-form__input-group" key={name}>
+                <label>{label}</label>
+                <input
+                  type={type}
+                  name={name}
+                  value={formData[name]}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+            ))}
+            <div className="business-form__input-group">
+              <label>Upload Service Images</label>
+              <input
+                type="file"
+                name="Images"
+                multiple
+                onChange={handleImageChange}
+              />
+            </div>
+          </div>
         )}
-        <button type="submit" className="business-form__submit-button">
-          Submit
-        </button>
+
+        {selectedService && (
+          <button type="submit" className="business-form__submit-button">
+            Submit
+          </button>
+        )}
       </form>
     </div>
   );

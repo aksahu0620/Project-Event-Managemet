@@ -1,23 +1,32 @@
 // routes/venueRoutes.js
 import express from 'express';
-import { createVenue, listVenues, getVenueDetails, updateVenueDetails, deleteVenue } from '../controllers/venueController.js';
+import {
+    createVenue,
+    listVenues,
+    getVenueDetails,
+    updateVenueDetails,
+    deleteVenue
+} from '../controllers/venueController.js';
 import { authenticateToken, authorizeAdminOrOwner } from '../middleware/authMiddleware.js';
+import upload from '../middleware/upload.js';
 
 const router = express.Router();
 
-// Route to list all venues
 router.get('/venues', listVenues);
 
-// Route to create a new venue with authorization
-router.post('/venues', authenticateToken, authorizeAdminOrOwner, createVenue);
+// Single photo upload (field name must match frontend/Postman: 'Photos')
+router.post('/venues', authenticateToken, authorizeAdminOrOwner, upload.single('Photos'), createVenue);
 
-// GET /api/venues/:id - Fetch specific venue details by ID
 router.get('/venues/:id', getVenueDetails);
 
-// Route to update venue details
-router.put('/venues/:id', authenticateToken, authorizeAdminOrOwner, updateVenueDetails);
+router.put('/venues/:id', authenticateToken, authorizeAdminOrOwner, upload.single('Photos'), updateVenueDetails);
 
-// Route to Delete venue
 router.delete('/venues/:id', authenticateToken, authorizeAdminOrOwner, deleteVenue);
+
+router.post('/test-upload', upload.single('image'), (req, res) => {
+    console.log(req.file);
+    res.send('Upload success');
+  });
+  
 
 export default router;
